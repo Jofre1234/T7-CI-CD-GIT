@@ -1,4 +1,5 @@
 Tarea 7.0: Demo Práctica de Pipeline CI/CD
+
 Autor: [Tu Nombre Completo Aquí]
 
 Objetivo
@@ -13,7 +14,7 @@ Publicar dicho paquete como un "artefacto" descargable del pipeline.
 
 Estructura del Repositorio
 
-Para que este proyecto funcione, los archivos deben estar organizados en la siguiente estructura. El contenido de cada archivo se detalla más abajo.
+Para que este proyecto funcione, los archivos deben estar organizados en la siguiente estructura.
 
 /
 ├── .github/workflows/   
@@ -66,19 +67,15 @@ Ruta: .github/workflows/main-pipeline.yml
 # Nombre descriptivo que aparecerá en la pestaña "Actions" de GitHub
 name: Tarea 7 CI/CD - Test & Package
 
-# --- DISPARADORES (Triggers) ---
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
 
-# --- TRABAJOS (Jobs) ---
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
-   # --- PASOS (Steps) ---
     steps:
       - name: 1. Checkout del Repositorio
         uses: actions/checkout@v4
@@ -124,6 +121,7 @@ Ruta: package.json
     "url": "git+[https://github.com/](https://github.com/)[TU_USUARIO]/[TU_REPO].git"
   }
 }
+
 
 3. Lógica de la Aplicación
 
@@ -191,7 +189,7 @@ yarn-error.log*
 Thumbs.db
 
 
-💻 Cómo Ejecutar Localmente
+Cómo Ejecutar Localmente
 
 Antes de subir el proyecto a GitHub, puedes verificar que todo funcione en tu propia máquina.
 
@@ -202,7 +200,7 @@ npm install
 
 
 2. Ejecutar Pruebas (Criterio 3):
-Este comando ejecuta el script "test" que corre Jest. Debería pasar sin errores.
+Este comando ejecuta el script "test" que corre Jest.
 
 npm test
 
