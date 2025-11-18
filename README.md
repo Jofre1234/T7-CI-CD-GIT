@@ -1,72 +1,86 @@
-Tarea 7.0: Demo Práctica de Pipeline CI/CD
+# Demo Práctica de Pipeline CI/CD
 
 Autor: [Tu Nombre Completo Aquí]
 
-Objetivo
+## Objetivo
 
 El propósito de este repositorio es demostrar un ciclo CI/CD (Integración Continua / Despliegue Continuo) básico y funcional. El pipeline automatizado se encarga de:
 
-Verificar el código mediante pruebas unitarias.
+- Verificar el código mediante pruebas unitarias.
+- Construir un paquete (package) distribuible.
+- Publicar dicho paquete como un artefacto descargable del pipeline.
 
-Construir un paquete (package) distribuible.
+## Estructura del Repositorio
 
-Publicar dicho paquete como un "artefacto" descargable del pipeline.
-
-Estructura del Repositorio
-
-Para que este proyecto funcione, los archivos deben estar organizados en la siguiente estructura.
-
+```
 /
-├── .github/workflows/   
+├── .github/workflows/  
 │   └── main-pipeline.yml  
-│
-├── lib/                 
-│   └── suma.js           
-│
-├── tests/               
-│   └── suma.test.js      
-│
-├── .gitignore           
-├── index.js             
-├── package.json         
-└── README.md            
+├── lib/  
+│   └── suma.js  
+├── tests/  
+│   └── suma.test.js  
+├── .gitignore  
+├── index.js  
+├── package.json  
+└── README.md  
+```
 
+## Explicación del Ciclo CI/CD
 
-Explicación del Ciclo CI/CD
+Este pipeline sigue las fases fundamentales de CI/CD.
 
-Este pipeline sigue las fases fundamentales de CI/CD:
+### Trigger (Disparador):
 
-Trigger (Disparador): El ciclo se inicia automáticamente cada vez que se hace un push a la rama main o se abre un pull_request hacia ella.
+El pipeline se inicia automáticamente cuando:
 
-CI: Integración Continua (El Job build-and-test)
+- Se hace push a la rama main.
+- Se abre o actualiza un pull_request hacia la rama main.
 
-Checkout: El "runner" (servidor virtual de GitHub) clona el repositorio.
+### CI: Integración Continua (Job build-and-test)
 
-Setup: Se configura el entorno de ejecución (en este caso, Node.js v18).
+- **Checkout**: El runner clona el repositorio.  
+- **Setup**: Se configura Node.js v18.  
+- **Install**: Se instalan dependencias con:
 
-Install: Se instalan las dependencias del proyecto de forma limpia usando npm ci.
+```
+npm ci
+```
 
-Test: Se ejecutan las pruebas unitarias (npm test). Si alguna prueba falla, el pipeline se detiene aquí.
+- **Test**: Se ejecutan pruebas unitarias:
 
-Build (Construcción):
+```
+npm test
+```
 
-Package: Se ejecuta el script npm run build, que a su vez usa npm pack. Este comando comprime el proyecto en un archivo .tgz.
+### Build (Construcción)
 
-CD: Entrega Continua (Parcial)
+El build genera el paquete `.tgz` con:
 
-Upload Artifact: El pipeline toma el archivo .tgz generado y lo sube como un "Artefacto" de GitHub Actions.
+```
+npm run build
+```
 
-Contenido Completo de Todos los Archivos
+Esto ejecuta internamente:
 
-Para replicar este proyecto, crea los siguientes archivos y carpetas, y copia el contenido exacto que se proporciona a continuación.
+```
+npm pack
+```
 
-1. Archivo de Workflow (GitHub Actions)
+### CD: Entrega Continua
 
-Ruta: .github/workflows/main-pipeline.yml
+El pipeline sube el archivo `.tgz` como artefacto.
 
-# Nombre descriptivo que aparecerá en la pestaña "Actions" de GitHub
+---
+
+## Contenido Completo de los Archivos
+
+### Archivo Workflow
+
+**Ruta:** `.github/workflows/main-pipeline.yml`
+
+```yaml
 name: Tarea 7 CI/CD - Test & Package
-
 on:
   push:
     branches: [ main ]
@@ -77,30 +91,36 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - name: 1. Checkout del Repositorio
+      - name: Checkout del Repositorio
         uses: actions/checkout@v4
-      - name: 2. Configurar Node.js v18
+
+      - name: Configurar Node.js v18
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
-      - name: 3. Instalar Dependencias (npm ci)
+
+      - name: Instalar Dependencias
         run: npm ci
-      - name: 4. Ejecutar Pruebas (npm test)
+
+      - name: Ejecutar Pruebas
         run: npm test
-      - name: 5. Construir Paquete (npm run build)
+
+      - name: Construir Paquete
         run: npm run build
-      - name: 6. Subir Artefacto (Package)
+
+      - name: Subir Artefacto
         uses: actions/upload-artifact@v4
         with:
           name: demo-package
           path: '*.tgz'
+```
 
+---
 
-2. Configuración del Proyecto (NPM)
+### package.json
 
-Ruta: package.json
-
+```json
 {
   "name": "t7-demo-cicd",
   "version": "1.0.0",
@@ -118,113 +138,104 @@ Ruta: package.json
   },
   "repository": {
     "type": "git",
-    "url": "git+[https://github.com/](https://github.com/)[TU_USUARIO]/[TU_REPO].git"
+    "url": "git+https://github.com/TU_USUARIO/TU_REPO.git"
   }
 }
+```
 
+---
 
-3. Lógica de la Aplicación
+### lib/suma.js
 
-Ruta: lib/suma.js
-
-// Una función simple para demostrar la lógica de negocio
+```javascript
 function sum(a, b) {
   return a + b;
 }
 module.exports = sum;
+```
 
+---
 
-4. Pruebas Unitarias
+### tests/suma.test.js
 
-Ruta: tests/suma.test.js
+```javascript
+const sum = require('../lib/suma');
 
-const sum = require('../lib/suma'); // Corregido para apuntar a 'suma.js'
-
-// Suite de Pruebas para la función 'sum'
 describe('Función de Suma', () => {
-
-  test('Prueba de suma positiva: 2 + 3 debe ser 5', () => {
+  test('2 + 3 debe ser 5', () => {
     expect(sum(2, 3)).toBe(5);
   });
 
-  test('Prueba de suma con cero: 10 + 0 debe ser 10', () => {
+  test('10 + 0 debe ser 10', () => {
     expect(sum(10, 0)).toBe(10);
   });
 
-  test('Prueba de suma con negativos: -5 + 10 debe ser 5', () => {
+  test('-5 + 10 debe ser 5', () => {
     expect(sum(-5, 10)).toBe(5);
   });
-
 });
+```
 
+---
 
-5. Archivo de Ejecución Local (Opcional)
+### index.js
 
-Ruta: index.js
-
-const sum = require('./lib/suma'); // Corregido para apuntar a 'suma.js'
+```javascript
+const sum = require('./lib/suma');
 
 console.log('--- Demostración Local ---');
 console.log('Calculando 2 + 3 =', sum(2, 3));
 console.log('--------------------------');
+```
 
+---
 
-6. Archivo para Ignorar (Git)
+### .gitignore
 
-Ruta: .gitignore
-
-# Dependencias
+```
 /node_modules
-
-# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# Artefactos de Build (nuestro paquete)
 *.tgz
-
-# Sistema Operativo
 .DS_Store
 Thumbs.db
+```
 
+---
 
-Cómo Ejecutar Localmente
+## Cómo Ejecutar Localmente
 
-Antes de subir el proyecto a GitHub, puedes verificar que todo funcione en tu propia máquina.
+Instalar dependencias:
 
-1. Instalar Dependencias:
-Este comando lee package.json e instala jest.
-
+```
 npm install
+```
 
+Ejecutar pruebas:
 
-2. Ejecutar Pruebas (Criterio 3):
-Este comando ejecuta el script "test" que corre Jest.
-
+```
 npm test
+```
 
+Construir el paquete:
 
-3. Construir el Paquete (Criterio 4):
-Este comando ejecuta el script "build" (npm pack) y crea el archivo .tgz.
-
+```
 npm run build
+```
 
+Ejecutar script principal:
 
-4. Ejecutar el Script Principal (Opcional):
-Esto corre index.js para una prueba simple.
-
+```
 npm start
+```
 
+---
 
-Verificación del "Package" (Artefacto)
+## Verificación del Artefacto
 
-Una vez que hayas creado todos los archivos en sus carpetas correctas y los hayas subido a tu repositorio de GitHub:
+Una vez ejecutado el pipeline:
 
-Ve a la pestaña "Actions" en tu repositorio.
-
-Haz clic en el workflow más reciente (ej: "Tarea 7 CI/CD").
-
-En la página de resumen, busca la sección "Artifacts".
-
-Allí verás el artefacto demo-package listo para descargar.
+1. Ve a **Actions**.
+2. Abre el workflow ejecutado.
+3. En **Artifacts**, descarga `demo-package`.
