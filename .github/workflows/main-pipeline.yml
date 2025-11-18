@@ -1,0 +1,36 @@
+# Nombre descriptivo que aparecerá en la pestaña "Actions" de GitHub
+name: Tarea 7 CI/CD - Test & Package
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. Checkout del Repositorio
+        uses: actions/checkout@v4
+
+      - name: 2. Configurar Node.js v18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 3. Instalar Dependencias (npm ci)
+        run: npm ci
+
+      - name: 4. Ejecutar Pruebas (npm test)
+        run: npm test
+
+      - name: 5. Construir Paquete (npm run build)
+        run: npm run build
+
+      - name: 6. Subir Artefacto (Package)
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-package
+          path: '*.tgz'

@@ -1,0 +1,20 @@
+{
+  "name": "t7-demo-cicd",
+  "version": "1.0.0",
+  "description": "Tarea 7 - Demostración de un pipeline CI/CD con GitHub Actions, Jest y NPM",
+  "main": "index.js",
+  "author": "[REEMPLAZA CON TU NOMBRE]",
+  "license": "ISC",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest --runInBand --verbose",
+    "build": "npm pack"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/[TU_USUARIO]/[TU_REPO].git"
+  }
+}
