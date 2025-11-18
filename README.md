@@ -1,7 +1,5 @@
 # Demo Práctica de Pipeline CI/CD
 
-Autor: [Tu Nombre Completo Aquí]
-
 ## Objetivo
 
 El propósito de este repositorio es demostrar un ciclo CI/CD (Integración Continua / Despliegue Continuo) básico y funcional. El pipeline automatizado se encarga de:
@@ -239,3 +237,7 @@ Una vez ejecutado el pipeline:
 1. Ve a **Actions**.
 2. Abre el workflow ejecutado.
 3. En **Artifacts**, descarga `demo-package`.
+
+## Referencias o metodos de apendizaje que se hizo esto
+1. https://docs.github.com/en/actions
+2. https://docs.npmjs.com/cli/v10/commands/npm-pack
